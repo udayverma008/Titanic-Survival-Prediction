@@ -1,51 +1,67 @@
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Dataset Path
+# Project root
 BASE_DIR = Path(__file__).resolve().parent.parent
-csv_file = BASE_DIR / "data" / "Titanic-Dataset.csv"
 
-# Load Datasetgit add .
-df = pd.read_csv(csv_file)
+# Dataset
+csv_path = BASE_DIR / "data" / "Titanic-Dataset.csv"
 
-print("="*50)
-print("Dataset Shape")
-print("="*50)
-print(df.shape)
+# Images folder
+images_path = BASE_DIR / "images"
+images_path.mkdir(exist_ok=True)
 
-print("\n")
+# Load dataset
+df = pd.read_csv(csv_path)
 
-print("="*50)
-print("Columns")
-print("="*50)
-print(df.columns)
-
-print("\n")
-
-print("="*50)
-print("Dataset Information")
-print("="*50)
-print(df.info())
-
-print("\n")
-
-print("="*50)
-print("Missing Values")
-print("="*50)
+print("Dataset Shape:", df.shape)
+print("\nMissing Values:")
 print(df.isnull().sum())
 
-print("\n")
+# ----------------------------
+# Survival Count
+# ----------------------------
+plt.figure(figsize=(6,4))
+df["Survived"].value_counts().plot(kind="bar")
+plt.title("Survival Count")
+plt.xlabel("Survived")
+plt.ylabel("Passengers")
+plt.xticks([0,1],["No","Yes"])
+plt.tight_layout()
+plt.savefig(images_path/"survival_count.png")
+plt.close()
 
-print("="*50)
-print("Summary Statistics")
-print("="*50)
-print(df.describe())
+# ----------------------------
+# Gender Distribution
+# ----------------------------
+plt.figure(figsize=(6,4))
+df["Sex"].value_counts().plot(kind="bar")
+plt.title("Gender Distribution")
+plt.tight_layout()
+plt.savefig(images_path/"gender_distribution.png")
+plt.close()
 
-print("\n")
+# ----------------------------
+# Passenger Class
+# ----------------------------
+plt.figure(figsize=(6,4))
+df["Pclass"].value_counts().sort_index().plot(kind="bar")
+plt.title("Passenger Class")
+plt.xlabel("Class")
+plt.tight_layout()
+plt.savefig(images_path/"passenger_class.png")
+plt.close()
 
-print("="*50)
-print("Unique Values")
-print("="*50)
+# ----------------------------
+# Age Distribution
+# ----------------------------
+plt.figure(figsize=(6,4))
+df["Age"].plot(kind="hist", bins=20)
+plt.title("Age Distribution")
+plt.xlabel("Age")
+plt.tight_layout()
+plt.savefig(images_path/"age_distribution.png")
+plt.close()
 
-for column in df.columns:
-    print(f"{column}: {df[column].nunique()} unique values")
+print("\nGraphs saved successfully!")
